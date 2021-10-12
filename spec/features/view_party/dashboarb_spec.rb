@@ -118,7 +118,5 @@ RSpec.describe 'View Party on Dashboard', :vcr do
       vp = ViewParty.last
       expect(vp.duration).to_not eq 0
     end
-
-
   end
 end

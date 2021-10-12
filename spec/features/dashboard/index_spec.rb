@@ -11,8 +11,6 @@ RSpec.describe 'Dashboard Index' do
 
   context 'has content' do
     it 'welcomes the user' do
-      #TODO still need authenticated user to finish test
-      # expect(page).to have_content('Welcome ' + user.name)
       expect(page).to have_content('Welcome Tim')
     end
 

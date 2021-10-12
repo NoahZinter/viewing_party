@@ -2,15 +2,15 @@
   "name": "viewing_party",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "5.4.0",
+    "@rails/webpacker": "5.4.3",
+    "tailwindcss": "^2.2.4",
     "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12",
-    "tailwindcss": "^2.2.4"
+    "webpack-cli": "^3.3.12"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.6",
     "postcss": "^8.3.5",
     "tailwindcss": "^2.2.4",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3"
   }
 }
