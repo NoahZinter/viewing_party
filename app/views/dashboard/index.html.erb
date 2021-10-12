@@ -42,8 +42,11 @@
             <p><%= link_to vp.movie_title, movie_path(vp.movie_id) %></p>
             <p><%= vp.event_time.getlocal.strftime('%d %b %I:%M %P') %></p>
             <div class="grid grid-cols-3 gap-2 justify-items-center">
+                  <h4>Friends Attending: </h4>
               <% vp.view_party_users.users.each do |user| %>
-                    <p><%= user.username %></p>
+                    <ul>
+                    <li><%= user.username %></li>
+                    </ul>
               <% end %>
             </div>
           </div>
