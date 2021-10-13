@@ -16,7 +16,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'bootsnap'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
-
+gem 'figaro'
 gem 'webpacker'
 gem 'faraday'
 gem 'bcrypt'
