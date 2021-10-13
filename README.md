@@ -104,7 +104,7 @@ ___
 
 If you would like install this app locally you'll need to do a few things:
 
-- Clone the code to your local machine `git clone git@github.com:zachjamesgreen/viewing_party.git `
+- Clone the code to your local machine `git clone git@github.com:noahzinter/viewing_party.git `
 - `bundle install`
 - `rails db:{create,migrate}`
 - `bundle exec rails webpacker:install`
