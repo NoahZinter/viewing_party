@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MoviesFacade do
   describe 'discover' do
-    it 'creates movies' do
+    it 'returns movie objects' do
       VCR.use_cassette('facade_discover', :record => :new_episodes) do
         movies = MoviesFacade.discover
 
