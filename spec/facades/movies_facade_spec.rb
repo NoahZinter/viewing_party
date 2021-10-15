@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MoviesFacade do
   describe 'discover' do
-    it 'returns movie objects' do
+    it 'populates movie objects' do
       VCR.use_cassette('facade_discover', :record => :new_episodes) do
         movies = MoviesFacade.discover
 
@@ -37,17 +37,15 @@ RSpec.describe MoviesFacade do
         end
       end
     end
-  end
 
-  describe 'top_rated' do
-    it 'retrieves top rated' do
-      VCR.use_cassette('facade_search', :record => :new_episodes) do
-        movies = MoviesFacade.top_rated(1)
-        next_20 = MoviesFacade.top_rated(2)
+    it 'has default search query untitled' do
+      VCR.use_cassette('facade_empty_search', :record => :new_episodes) do
+        default_search = MoviesFacade.search
 
-        expect(movies.first).is_a? Movie
-        expect(movies.count).to eq 20
-        movies.each do |movie|
+        expect(default_search.first).is_a? Movie
+        expect(default_search.first.title).to include('Untitled')
+        expect(default_search.count).to eq 20
+        default_search.each do |movie|
           expect(movie).is_a? Movie
           expect(movie.id).is_a? Integer
           expect(movie.poster_path).is_a? String
@@ -55,9 +53,17 @@ RSpec.describe MoviesFacade do
           expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
           expect(movie.vote_average).is_a? Integer
         end
-        expect(next_20.first).is_a? Movie
-        expect(next_20.count).to eq 20
-        next_20.each do |movie|
+      end
+    end
+  end
+
+  describe 'top_rated' do
+    it 'retrieves 40 top rated' do
+      VCR.use_cassette('facade_top_40', :record => :new_episodes) do
+        top_40 = MoviesFacade.top_rated
+
+        expect(top_40.count).to eq 40
+        top_40.each do |movie|
           expect(movie).is_a? Movie
           expect(movie.id).is_a? Integer
           expect(movie.poster_path).is_a? String

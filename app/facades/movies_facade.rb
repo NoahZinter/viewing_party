@@ -5,15 +5,16 @@ class MoviesFacade
       movie_creator(json)
     end
 
-    def search(query)
+    def search(query = 'untitled')
       json = TMDBService.search(query)
       movie_creator(json)
     end
 
     def top_rated
       #Argument in top_rated method is page number, facade is populating top 40 results instead of default 20
-      json = TMDBService.top_rated(1) + TMDBService.top_rated(2)
-      movie_creator(json)
+      page_1 = TMDBService.top_rated
+      page_2 = TMDBService.top_rated(2)
+      movie_creator(page_1) + movie_creator(page_2)
     end
 
     def find(id)
