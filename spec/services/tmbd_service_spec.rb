@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# These tests make live calls to the TMDB API with a rate limit. Skip these if running full test suite repeatedly.
 RSpec.describe TMDBService do
   describe '.discover' do
     it 'returns JSON hash of 20 movies' do
@@ -105,22 +106,102 @@ RSpec.describe TMDBService do
   end
 
   describe '.top_rated' do
-    it 'retrieves top rated' do
-      VCR.use_cassette('tmdb_service_top_rated', :record => :new_episodes) do
-        body = TMDBService.top_rated(1)
-        body_2 = TMDBService.top_rated(2)
-        top_20 = body[:results]
-        next_20 = body[:results]
+    it 'defaults to page 1' do
+      default = TMDBService.top_rated
+      with_arg = TMDBService.top_rated(1)
+      expect(default).to eq with_arg
+    end
 
-        expect(body).is_a? Hash
-        expect(top_20).is_a? Array
-        expect(top_20.length).to eq 20
-        expect(top_20.first[:genre_ids]).is_a? Array
-        expect(top_20.first[:title]).is_a? String
-        expect(next_20).is_a? Array
-        expect(next_20.length).to eq 20
-        expect(next_20.first[:genre_ids]).is_a? Array
-        expect(next_20.first[:title]).is_a? String
+    it 'retrieves top rated' do
+      top_rated_response = TMDBService.top_rated
+
+      expect(top_rated_response).is_a? Hash
+      expect(top_rated_response).to have_key(:page)
+      expect(top_rated_response[:page]).to eq 1
+      expect(top_rated_response).to have_key(:results)
+      expect(top_rated_response[:results]).is_a? Array
+      expect(top_rated_response[:results].count).to eq 20
+
+      top_rated_response[:results].each do |movie|
+        expect(movie).is_a? Hash
+        expect(movie).to have_key(:adult)
+        expect(movie[:adult]).to eq false
+        expect(movie).to have_key(:backdrop_path)
+        expect(movie[:backdrop_path]).is_a? String
+        expect(movie).to have_key(:genre_ids)
+        expect(movie[:genre_ids]).is_a? Array
+          movie[:genre_ids].each do |gen_id|
+            expect(gen_id).is_a? Integer
+          end
+        expect(movie).to have_key(:id)
+        expect(movie[:id]).is_a? Integer
+        expect(movie).to have_key(:original_language)
+        expect(movie[:original_language]).is_a? String
+        expect(movie).to have_key(:overview)
+        expect(movie[:overview]).is_a? String
+        expect(movie).to have_key(:popularity)
+        expect(movie[:popularity]).is_a? Float
+        expect(movie).to have_key(:poster_path)
+        expect(movie[:poster_path]).is_a? String
+        expect(movie).to have_key(:release_date)
+        expect(movie[:release_date]).is_a? String
+        expect(movie[:release_date].to_date).is_a? Date
+        expect(movie).to have_key(:title)
+        expect(movie[:title]).is_a? String
+        expect(movie).to have_key(:video)
+        expect(movie[:video]).to eq(true).or eq(false)
+        expect(movie).to have_key(:vote_average)
+        expect(movie[:vote_average]).to be_a(Integer).or be_a(Float)
+        expect(movie).to have_key(:vote_count)
+        expect(movie[:vote_count]).is_a? Integer
+      end
+    end
+
+    it 'accepts page arguments' do
+      default = TMDBService.top_rated
+      with_arg = TMDBService.top_rated(2)
+
+      expect(default).not_to eq(with_arg)
+
+      expect(with_arg).is_a? Hash
+      expect(with_arg).to have_key(:page)
+      expect(with_arg[:page]).to eq 2
+      expect(with_arg).to have_key(:results)
+      expect(with_arg[:results]).is_a? Array
+      expect(with_arg[:results].count).to eq 20
+
+      with_arg[:results].each do |movie|
+        expect(movie).is_a? Hash
+        expect(movie).to have_key(:adult)
+        expect(movie[:adult]).to eq false
+        expect(movie).to have_key(:backdrop_path)
+        expect(movie[:backdrop_path]).is_a? String
+        expect(movie).to have_key(:genre_ids)
+        expect(movie[:genre_ids]).is_a? Array
+          movie[:genre_ids].each do |gen_id|
+            expect(gen_id).is_a? Integer
+          end
+        expect(movie).to have_key(:id)
+        expect(movie[:id]).is_a? Integer
+        expect(movie).to have_key(:original_language)
+        expect(movie[:original_language]).is_a? String
+        expect(movie).to have_key(:overview)
+        expect(movie[:overview]).is_a? String
+        expect(movie).to have_key(:popularity)
+        expect(movie[:popularity]).is_a? Float
+        expect(movie).to have_key(:poster_path)
+        expect(movie[:poster_path]).is_a? String
+        expect(movie).to have_key(:release_date)
+        expect(movie[:release_date]).is_a? String
+        expect(movie[:release_date].to_date).is_a? Date
+        expect(movie).to have_key(:title)
+        expect(movie[:title]).is_a? String
+        expect(movie).to have_key(:video)
+        expect(movie[:video]).to eq(true).or eq(false)
+        expect(movie).to have_key(:vote_average)
+        expect(movie[:vote_average]).to be_a(Integer).or be_a(Float)
+        expect(movie).to have_key(:vote_count)
+        expect(movie[:vote_count]).is_a? Integer
       end
     end
   end
@@ -210,6 +291,12 @@ RSpec.describe TMDBService do
 
     it 'does not search without id' do
       expect{TMDBService.find()}.to raise_error(ArgumentError)
+    end
+
+    it 'searches with id as string or integer' do
+      string_find = TMDBService.find('238')
+
+      expect(string_find).to eq @found_movie
     end
   end
 end
