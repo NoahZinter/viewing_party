@@ -19,8 +19,7 @@
 # Ignore test coverage
 /coverage/*
 
-/public/packs
-/public/packs-test
+
 /node_modules
 /yarn-error.log
 yarn-debug.log*
@@ -35,3 +34,5 @@ vcr_cassettes/*
 /config/master.key
 # Ignore application configuration
 /config/application.yml
+
+
