@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Dashboard Index' do
   before :each do
-    #TODO login as a user to test
     User.destroy_all
     @user = User.create!(username:'Tim', email: 'tim@ex.com', password_digest: 'apples')
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)

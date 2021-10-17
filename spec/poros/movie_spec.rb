@@ -47,12 +47,11 @@ RSpec.describe Movie do
 
   it 'can parse json and return a Movie' do
     movie = Movie.parse(@info.to_json)
+
     expect(movie).to be_instance_of(Movie)
     expect(movie.id).to eq @info[:id]
     expect(movie.poster_path).to eq @info[:poster_path]
     expect(movie.vote_average).to eq @info[:vote_average]
     expect(movie.title).to eq @info[:title]
-    # expect(movie.runtime).to eq @info[:runtime]
-    # expect(movie.overview).to eq @info[:overview]
   end
 end

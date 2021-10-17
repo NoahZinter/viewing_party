@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# These tests make live calls to the TMDB API with a rate limit. Skip these if running full test suite repeatedly.
 RSpec.describe TMDBService do
   describe '.discover' do
     it 'returns JSON hash of 20 movies' do
