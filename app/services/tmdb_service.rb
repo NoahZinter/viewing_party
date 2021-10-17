@@ -18,7 +18,7 @@ class TMDBService
       json_parser(res)
     end
 
-    def top_rated(page)
+    def top_rated(page = 1)
       url = 'https://api.themoviedb.org/3/movie/top_rated'
       res = Faraday.get(url, { api_key: ENV['TMDB_API_KEY'], page: page })
       json_parser(res)

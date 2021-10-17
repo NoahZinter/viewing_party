@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MoviesFacade do
   describe 'discover' do
-    it 'creates movies' do
+    it 'populates movie objects' do
       VCR.use_cassette('facade_discover', :record => :new_episodes) do
         movies = MoviesFacade.discover
 
@@ -15,6 +15,25 @@ RSpec.describe MoviesFacade do
           expect(movie.title).is_a? String
           expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
           expect(movie.vote_average).is_a? Integer
+        end
+      end
+    end
+
+    it 'does not populate unnecessary data' do
+      VCR.use_cassette('facade_discover_attr_check', :record => :new_episodes) do
+        movies = MoviesFacade.discover
+
+        expect(movies.count).to eq 20
+        movies.each do |movie|
+          expect(movie).is_a? Movie
+          expect(movie.id).is_a? Integer
+          expect(movie.poster_path).is_a? String
+          expect(movie.title).is_a? String
+          expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
+          expect(movie.vote_average).is_a? Integer
+          expect{movie.popularity}.to raise_error(NameError)
+          expect{movie.release_date}.to raise_error(NameError)
+          expect{movie.video}.to raise_error(NameError)
         end
       end
     end
@@ -37,27 +56,15 @@ RSpec.describe MoviesFacade do
         end
       end
     end
-  end
 
-  describe 'top_rated' do
-    it 'retrieves top rated' do
-      VCR.use_cassette('facade_search', :record => :new_episodes) do
-        movies = MoviesFacade.top_rated(1)
-        next_20 = MoviesFacade.top_rated(2)
+    it 'has default search query untitled' do
+      VCR.use_cassette('facade_empty_search', :record => :new_episodes) do
+        default_search = MoviesFacade.search
 
-        expect(movies.first).is_a? Movie
-        expect(movies.count).to eq 20
-        movies.each do |movie|
-          expect(movie).is_a? Movie
-          expect(movie.id).is_a? Integer
-          expect(movie.poster_path).is_a? String
-          expect(movie.title).is_a? String
-          expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
-          expect(movie.vote_average).is_a? Integer
-        end
-        expect(next_20.first).is_a? Movie
-        expect(next_20.count).to eq 20
-        next_20.each do |movie|
+        expect(default_search.first).is_a? Movie
+        expect(default_search.first.title).to include('Untitled')
+        expect(default_search.count).to eq 20
+        default_search.each do |movie|
           expect(movie).is_a? Movie
           expect(movie.id).is_a? Integer
           expect(movie.poster_path).is_a? String
@@ -67,10 +74,66 @@ RSpec.describe MoviesFacade do
         end
       end
     end
+
+    it 'does not populate unnecessary data' do
+      VCR.use_cassette('facade_search_attr_check', :record => :new_episodes) do
+        movies = MoviesFacade.discover
+
+        expect(movies.count).to eq 20
+        movies.each do |movie|
+          expect(movie).is_a? Movie
+          expect(movie.id).is_a? Integer
+          expect(movie.poster_path).is_a? String
+          expect(movie.title).is_a? String
+          expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
+          expect(movie.vote_average).is_a? Integer
+          expect{movie.popularity}.to raise_error(NameError)
+          expect{movie.release_date}.to raise_error(NameError)
+          expect{movie.video}.to raise_error(NameError)
+        end
+      end
+    end
+  end
+
+  describe 'top_rated' do
+    it 'retrieves 40 top rated' do
+      VCR.use_cassette('facade_top_40', :record => :new_episodes) do
+        top_40 = MoviesFacade.top_rated
+
+        expect(top_40.count).to eq 40
+        top_40.each do |movie|
+          expect(movie).is_a? Movie
+          expect(movie.id).is_a? Integer
+          expect(movie.poster_path).is_a? String
+          expect(movie.title).is_a? String
+          expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
+          expect(movie.vote_average).is_a? Integer
+        end
+      end
+    end
+
+    it 'does not populate unnecessary data' do
+      VCR.use_cassette('facade_top_attr_check', :record => :new_episodes) do
+        movies = MoviesFacade.discover
+
+        expect(movies.count).to eq 20
+        movies.each do |movie|
+          expect(movie).is_a? Movie
+          expect(movie.id).is_a? Integer
+          expect(movie.poster_path).is_a? String
+          expect(movie.title).is_a? String
+          expect(movie.image_base_url).to eq 'https://image.tmdb.org/t/p/'
+          expect(movie.vote_average).is_a? Integer
+          expect{movie.popularity}.to raise_error(NameError)
+          expect{movie.release_date}.to raise_error(NameError)
+          expect{movie.video}.to raise_error(NameError)
+        end
+      end
+    end
   end
 
   describe 'find' do
-    it 'finds movie details by id' do
+    it 'populates movie details by id' do
       VCR.use_cassette('facade_find', :record => :new_episodes) do
         movie_details = MoviesFacade.find(238)
 
@@ -81,6 +144,26 @@ RSpec.describe MoviesFacade do
         expect(movie_details.cast).is_a? Array
         expect(movie_details.reviews).is_a? Array
       end
+    end
+
+    it 'does not populate unnecessary data' do
+      VCR.use_cassette('facade_find_attr_check', :record => :new_episodes) do
+        movie_details = MoviesFacade.find(238)
+
+        expect(movie_details).is_a? MovieDetail
+        expect(movie_details.runtime).is_a? Integer
+        expect(movie_details.overview).is_a? String
+        expect(movie_details.genres).is_a? Array
+        expect(movie_details.cast).is_a? Array
+        expect(movie_details.reviews).is_a? Array
+        expect{movie_details.revenue}.to raise_error(NameError)
+        expect{movie_details.release_date}.to raise_error(NameError)
+        expect{movie_details.original_language}.to raise_error(NameError)
+      end
+    end
+
+    it 'does not find without id' do
+      expect{MoviesFacade.find}.to raise_error(ArgumentError)
     end
   end
 end

@@ -18,6 +18,6 @@ class MoviesController < ApplicationController
   end
 
   def top_rated
-    @movies = MoviesFacade.top_rated(1) + MoviesFacade.top_rated(2)
+    @movies = MoviesFacade.top_rated
   end
 end
