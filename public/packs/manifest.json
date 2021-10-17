@@ -8,6 +8,9 @@
       ],
       "js.map": [
         "/packs/js/application-8b734e69a952820e755e.js.map"
+      ],
+      "css": [
+        "app/javascript/stylesheets/application.css"
       ]
     }
   }
