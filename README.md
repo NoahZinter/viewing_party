@@ -12,7 +12,7 @@
 
 Viewing Party deployed on
 
-- [Heroku](https://viewingpartyzjg.herokuapp.com/)
+- [Heroku](https://viewingpartynz.herokuapp.com/)
 
 Watch movies with your friends! Register with this app, add your friends, find a movie, and then start a viewing party. The movie data is from [The Movie Database](https://www.themoviedb.org/).
 
