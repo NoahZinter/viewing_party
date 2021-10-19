@@ -20,6 +20,8 @@ gem 'figaro'
 gem 'webpacker'
 gem 'faraday'
 gem 'bcrypt'
+gem 'execjs'
+gem 'mini_racer'
 
 group :development, :test do
   gem 'pry'

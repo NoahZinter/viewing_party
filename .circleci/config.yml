@@ -1,0 +1,43 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2
+jobs:
+  build:
+    working_directory: ~/viewing_party
+    docker:
+      - image: cimg/ruby:2.7.2-node
+        environment:
+          PG_HOST: localhost
+          PG_USER: cicleci
+      - image: postgres:13.2
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: viewing_party_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: gem install bundler -v 2.2.26
+      - run:
+          name: Bundle
+          command: bundle install
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
+      - run:
+          name: DB Setup
+          command: |
+            rails db:create RAILS_ENV=test
+            rails db:migrate RAILS_ENV=test
+          environment:
+            DATABASE_URL: "postgres://circleci@localhost:5432/viewing_party_test"
+      - run:
+          name: Run specs
+          command: |
+            npm uninstall tailwindcss postcss autoprefixer
+            npm install tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+            rails assets:precompile
+            bundle exec rspec
+          environment:
+            DATABASE_URL: "postgres://circleci@localhost:5432/viewing_party_test"
