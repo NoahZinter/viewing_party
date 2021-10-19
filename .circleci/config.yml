@@ -35,7 +35,6 @@ jobs:
       - run:
           name: Run specs
           command: |
-            RAILS_ENV=test rails assets:precompile
             bundle exec rspec
           environment:
             DATABASE_URL: "postgres://circleci@localhost:5432/viewing_party_test"
