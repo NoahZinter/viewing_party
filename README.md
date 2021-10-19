@@ -1,4 +1,4 @@
-# Viewing Party ![Circle CI Status](https://circleci.com/gh/noahzinter/viewing_party.svg?style=svg/?branch=main)
+# Viewing Party ![Circle CI Status](https://circleci.com/gh/viewing_party.svg?style=svg/?branch=main)
 
 ---
 # Our Devs:
