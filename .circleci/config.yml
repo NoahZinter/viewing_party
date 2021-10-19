@@ -35,6 +35,8 @@ jobs:
       - run:
           name: Run specs
           command: |
+            npm uninstall tailwindcss postcss autoprefixer
+            npm install tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
             rails assets:precompile
             bundle exec rspec
           environment:
