@@ -5,7 +5,7 @@ jobs:
   build:
     working_directory: ~/viewing_party
     docker:
-      - image: cimg/ruby:2.7.2
+      - image: cimg/ruby:2.7.2-node
         environment:
           PG_HOST: localhost
           PG_USER: cicleci
