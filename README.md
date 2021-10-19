@@ -1,4 +1,4 @@
-# Viewing Party ![Travis CI Status](https://www.travis-ci.com/zachjamesgreen/viewing_party.svg?branch=main)
+# Viewing Party ![Circle CI Status](https://circleci.com/gh/noahzinter/viewing_party.svg?style=svg)
 
 ---
 # Our Devs:
