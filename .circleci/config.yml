@@ -35,6 +35,7 @@ jobs:
       - run:
           name: Run specs
           command: |
+            bundle exec rails webpacker:install
             bundle exec rspec
           environment:
             DATABASE_URL: "postgres://circleci@localhost:5432/viewing_party_test"
